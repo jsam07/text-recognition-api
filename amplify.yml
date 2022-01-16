@@ -1,0 +1,28 @@
+version: 1
+frontend:
+    phases:
+        preBuild:
+            commands:
+                - npm ci                
+
+        build:
+            commands:
+                - echo "AZURE_API_KEY=$AZURE_API_KEY" >> .env
+                - echo "AZURE_COGNITIVE_ENDPOINT=$AZURE_COGNITIVE_ENDPOINT" >> .env
+                - echo "GOOGLE_ACCOUNT_TYPE=$GOOGLE_ACCOUNT_TYPE" >> .env
+                - echo "GOOGLE_PROJECT_ID=$GOOGLE_PROJECT_ID" >> .env
+                - echo "GOOGLE_PRIVATE_KEY_ID=$GOOGLE_PRIVATE_KEY_ID" >> .env
+                - echo "GOOGLE_CLIENT_EMAIL=$GOOGLE_CLIENT_EMAIL" >> .env
+                - echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> .env
+                - echo "GOOGLE_AUTH_URI=$GOOGLE_AUTH_URI" >> .env
+                - echo "GOOGLE_TOKEN_URI=$GOOGLE_TOKEN_URI" >> .env
+                - echo "GOOGLE_AUTH_CERT_URL=$GOOGLE_AUTH_CERT_URL" >> .env
+                - echo "GOOGLE_CLIENT_CERT_URL=$GOOGLE_CLIENT_CERT_URL" >> .env
+                
+    artifacts:
+        baseDirectory: /
+        files:
+            - '**/*'
+    cache:
+        paths:
+            - node_modules/**/*
