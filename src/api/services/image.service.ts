@@ -1,28 +1,24 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import hljs from 'highlight.js';
-import request from 'request';
+import _ from 'lodash';
+import beautify from 'js-beautify';
+import detectLang from 'lang-detector';
 import vision from '@google-cloud/vision';
+import LanguageDetect from 'languagedetect';
 
 import { logger } from '@utils/logger.util';
 
-import {
-    AZURE_API_KEY,
-    AZURE_COGNITIVE_ENDPOINT,
-    ENVIRONMENT,
-    GOOGLE_API_CREDENTIALS,
-    GOOGLE_API_CREDS,
-} from '@utils/secrets.util';
+import { ENVIRONMENT, GOOGLE_API_CREDENTIALS } from '@utils/secrets.util';
 import DatabaseException from '@errors/database.exception';
 
 export default class ImageProcessingService {
     public static annotateImage = async (
         imagePath: string,
+        isCode = true,
     ): Promise<string> => {
         try {
             // Creates a client
             let client;
-
             if (ENVIRONMENT === 'development') {
                 client = new vision.ImageAnnotatorClient({
                     credentials: GOOGLE_API_CREDENTIALS,
@@ -31,79 +27,65 @@ export default class ImageProcessingService {
                 client = new vision.ImageAnnotatorClient();
             }
 
-            // logger.warn(GOOGLE_APPLICATION_CREDENTIALS);
-            // logger.warn(JSON.stringify());
-
-            // Read a local image as a text document
+            // Extract Text
             const [result] = await client.documentTextDetection(imagePath);
             const { fullTextAnnotation } = result;
-            console.log(`Full text: \n\n${fullTextAnnotation.text}`);
-            // fullTextAnnotation.pages.forEach(page => {
-            //     page.blocks.forEach(block => {
-            //         console.log(`Block confidence: ${block.confidence}`);
-            //         block.paragraphs.forEach(paragraph => {
-            //             console.log(
-            //                 `Paragraph confidence: ${paragraph.confidence}`,
-            //             );
-            //             paragraph.words.forEach(word => {
-            //                 const wordText = word.symbols
-            //                     .map(s => s.text)
-            //                     .join('');
-            //                 console.log(`Word text: ${wordText}`);
-            //                 console.log(`Word confidence: ${word.confidence}`);
-            //                 word.symbols.forEach(symbol => {
-            //                     console.log(`Symbol text: ${symbol.text}`);
-            //                     console.log(
-            //                         `Symbol confidence: ${symbol.confidence}`,
-            //                     );
-            //                 });
-            //             });
-            //         });
-            //     });
-            // });
-            // const subscriptionKey = AZURE_API_KEY;
-            // const endpoint = AZURE_COGNITIVE_ENDPOINT;
+            const textCode = fullTextAnnotation?.text;
+            console.log(`Full text: \n\n${textCode}`);
 
-            // const uriBase = `${endpoint}vision/v3.1/ocr`;
-
-            // const imageUrl = 'https://i.stack.imgur.com/XbmzZ.png';
-
-            // // Request parameters.
-            // const params = {
-            //     language: 'unk',
-            //     detectOrientation: 'true',
-            // };
-
-            // const options = {
-            //     uri: uriBase,
-            //     qs: params,
-            //     // eslint-disable-next-line no-useless-concat
-            //     body: `${'{"url": ' + '"'}${imageUrl}"}`,
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         'Ocp-Apim-Subscription-Key': subscriptionKey,
-            //     },
-            // };
-
-            // request.post(options, (error, response, body) => {
-            //     if (error) {
-            //         console.log('Error: ', error);
-            //         return;
-            //     }
-            //     const jsonResponse = JSON.stringify(
-            //         JSON.parse(body),
-            //         null,
-            //         '  ',
-            //     );
-            //     console.log('JSON Response\n');
-            //     console.log(jsonResponse);
-            // });
-            const lang = hljs.highlightAuto(fullTextAnnotation.text);
-            // logger.warn(JSON.stringify(lang.secondBest, null, 4));
-            return fullTextAnnotation?.text;
+            if (isCode) {
+                const lang =
+                    ImageProcessingService.detectCodeLanguage(textCode);
+                return {
+                    lang,
+                    text: ImageProcessingService.beautifyCode(lang, textCode),
+                };
+            }
+            return {
+                lang: ImageProcessingService.detectTextLanguage(textCode),
+                text: textCode,
+            };
         } catch (error) {
             logger.error(error);
             throw new DatabaseException('Annotate Image');
+        }
+    };
+
+    public static beautifyCode = (lang: string, code: string): string => {
+        try {
+            switch (lang) {
+                case 'JavaScript': {
+                    return beautify.js(code, {
+                        indent_size: 2,
+                        space_in_empty_paren: true,
+                    });
+                }
+
+                default:
+                    return code;
+            }
+        } catch (error) {
+            logger.error(error);
+            return code;
+        }
+    };
+
+    public static detectCodeLanguage = (code: string): string => {
+        try {
+            return detectLang(code);
+        } catch (error) {
+            logger.error(error);
+            return 'Unknown';
+        }
+    };
+
+    public static detectTextLanguage = (text: string): string => {
+        try {
+            const lngDetector = new LanguageDetect();
+            return _.upperFirst(lngDetector.detect(text)[0][0]);
+        } catch (error) {
+            logger.error(error);
+            return 'Unknown';
         }
     };
 }

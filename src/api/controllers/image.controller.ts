@@ -1,7 +1,6 @@
 import path from 'path';
 import uuid from 'uuid';
 import { promises as fs } from 'fs';
-
 import { Request, Response, NextFunction } from 'express';
 
 import ImageProcessingService from '@services/image.service';
@@ -13,7 +12,8 @@ export default class ImageProcessingController {
         next: NextFunction,
     ): Promise<void> => {
         try {
-            const { image } = req.body;
+            // eslint-disable-next-line prefer-const
+            let { image, code } = req.body;
             let imagePath = '';
 
             if (!image) {
@@ -31,12 +31,17 @@ export default class ImageProcessingController {
                 await fs.writeFile(imagePath, image, { encoding: 'base64' });
             }
 
+            if (code) {
+                code = true;
+            } else {
+                code = false;
+            }
+
             const response = await ImageProcessingService.annotateImage(
                 imagePath,
+                code,
             );
-            res.json({ text: response });
-
-            // console.log(image);
+            res.send(response);
         } catch (error) {
             next(error);
         }
