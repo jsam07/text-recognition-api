@@ -35,7 +35,7 @@ cd text-recognition-api
 npm install
 ```
 
-### 2. Start the REST API server
+### Start the REST API server
 
 ```
 npm run dev
