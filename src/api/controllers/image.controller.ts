@@ -16,6 +16,12 @@ export default class ImageProcessingController {
             let { image, code } = req.body;
             let imagePath = '';
 
+            if (code) {
+                code = true;
+            } else {
+                code = false;
+            }
+
             if (!image) {
                 imagePath = path.join(
                     __dirname,
@@ -25,16 +31,11 @@ export default class ImageProcessingController {
                     'img',
                     'test.jpg',
                 );
+                code = true;
             } else {
                 const uploadsDir = path.join(__dirname, '..', '..', 'uploads');
                 imagePath = path.join(uploadsDir, `${uuid.v1()}`);
                 await fs.writeFile(imagePath, image, { encoding: 'base64' });
-            }
-
-            if (code) {
-                code = true;
-            } else {
-                code = false;
             }
 
             const response = await ImageProcessingService.annotateImage(
