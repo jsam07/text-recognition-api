@@ -10,6 +10,8 @@ You can test out the Text Recognition API by following any of the steps below:
 
 To see the full capabilities of the API, visit [`https://text-recognition-api-v2.herokuapp.com/api/annotate`](https://text-recognition-api-v2.herokuapp.com/api/annotate)
 
+OR
+
 ### 1b. Clone and Run Docker Container
 
 ```
@@ -39,7 +41,7 @@ npm install
 npm run dev
 ```
 
-The server is now running on `http://localhost:3000`. You can now perform API requests, e.g. [`http://localhost:3000/api/annotate`](http://localhost:3000/api/annotate).
+The server is now running on `http://localhost:3000`. You can now perform API requests, e.g. [`http://localhost:3000/api/annotate`](http://localhost:3000/api/annotate). You can always visit [`https://text-recognition-api-v2.herokuapp.com/api/annotate`](https://text-recognition-api-v2.herokuapp.com/api/annotate) for a demo of the API.
 
 Note, running the application locally or via Docker will require environment variables with the following shape:
 
