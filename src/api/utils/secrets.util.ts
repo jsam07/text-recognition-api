@@ -53,7 +53,7 @@ if (process.env.GOOGLE_CREDENTIALS) {
     console.log(process.env.GOOGLE_APPLICATION_CREDENTIALS);
     fs.writeFileSync(
         process.env.GOOGLE_APPLICATION_CREDENTIALS,
-        JSON.stringify(GOOGLE_API_CREDENTIALS) || '',
+        process.env.GOOGLE_CREDENTIALS || '',
     );
 }
 
