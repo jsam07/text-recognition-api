@@ -22,9 +22,6 @@ export default class ImageProcessingService {
         try {
             // Creates a client
             let client;
-            // const client = new vision.ImageAnnotatorClient({
-            //     credentials: GOOGLE_API_CREDENTIALS,
-            // });
 
             if (ENVIRONMENT === 'development') {
                 client = new vision.ImageAnnotatorClient({
