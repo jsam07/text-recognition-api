@@ -2,7 +2,19 @@
 
 A OCR/HCR based API for recognizing code snippets, notes, and other academic content from images, built using Microsoft's Cognitive Services and Google's Cloud Vision API.
 
-### 1. Download API and install dependencies
+### 1.
+
+### Visit Hosted API
+
+To see the full capabilities of the API, visit [`https://text-recognition-api-v2.herokuapp.com/api/annotate`](https://text-recognition-api-v2.herokuapp.com/api/annotate)
+
+### Clone and Run Docker Container
+
+```
+docker run -d -p 3000:3000 jsam07/text-recognition-api:latest
+```
+
+### Download API and install dependencies
 
 Clone this repository:
 
@@ -25,6 +37,24 @@ npm run dev
 
 The server is now running on `http://localhost:3000`. You can now perform API requests, e.g. [`http://localhost:3000/api/annotate`](http://localhost:3000/api/annotate).
 
+Note, running the application locally or via Docker will require environment variables with the following shape:
+
+```sh
+AZURE_API_KEY=""
+AZURE_COGNITIVE_ENDPOINT=""
+
+GOOGLE_ACCOUNT_TYPE=""
+GOOGLE_PROJECT_ID=""
+GOOGLE_PRIVATE_KEY_ID=""
+GOOGLE_PRIVATE_KEY=""
+GOOGLE_CLIENT_EMAIL=""
+GOOGLE_CLIENT_ID=""
+GOOGLE_AUTH_URI=""
+GOOGLE_TOKEN_URI=""
+GOOGLE_AUTH_CERT_URL=""
+GOOGLE_CLIENT_CERT_URL=""
+```
+
 ## Using the REST API
 
 You can access the REST API using the following endpoints:
@@ -37,8 +67,8 @@ You can access the REST API using the following endpoints:
 
 -   `/api/annotate`: Annotate/Analyze image for text/code
     -   Body:
-        -   `image: String` (required): The base64 string of an image
-        -   `code: String` (optional): If image is code snippet or not
+        -   `image: String` (required): The base64 string of the image to process
+        -   `code: Boolean` (optional): If image is code snippet or not
 
 ## Important Acknowledgements:
 
