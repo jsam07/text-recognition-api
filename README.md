@@ -2,19 +2,23 @@
 
 A OCR/HCR based API for recognizing code snippets, notes, and other academic content from images, built using Microsoft's Cognitive Services and Google's Cloud Vision API.
 
-### 1.
+### 1.Instructions
 
-### Visit Hosted API
+You can test out the Text Recognition API by following any of the steps below:
+
+### 1a. Visit Hosted API
 
 To see the full capabilities of the API, visit [`https://text-recognition-api-v2.herokuapp.com/api/annotate`](https://text-recognition-api-v2.herokuapp.com/api/annotate)
 
-### Clone and Run Docker Container
+### 1b. Clone and Run Docker Container
 
 ```
 docker run -d -p 3000:3000 jsam07/text-recognition-api:latest
 ```
 
-### Download API and install dependencies
+OR
+
+### 1c. Download API and install dependencies
 
 Clone this repository:
 
