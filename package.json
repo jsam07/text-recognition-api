@@ -58,7 +58,6 @@
     "request": "^2.88.2",
     "shelljs": "^0.8.4",
     "supertest": "^6.1.6",
-    "symspell-ex": "^1.1.6",
     "uuid": "^3.4.0",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.5"
