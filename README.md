@@ -1,4 +1,4 @@
-## Text Recognition API (nwHacks 2022)
+# Text Recognition API (nwHacks 2022)
 
 A OCR/HCR based API for recognizing code snippets, notes, and other academic content from images, built using Microsoft's Cognitive Services and Google's Cloud Vision API.
 
